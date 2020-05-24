@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADAL App</title>
+    <script src="lib/jquery/jquery.min.js"></script>
+    <script src="lib/moment/min/moment.min.js"></script>
+    <script src="lib/adal-angular/dist/adal.min.js"></script>
+    <script src="app.js"></script>
+    <link rel="stylesheet" type="text/css" href="app.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>jQuery App using ADAL & Microsoft Graph</h1>
+        <a onclick="doRead()">Read from Graph</a>
+        <a onclick="createEvent()">Create an Outlook Event</a>
+        <p id="pResult" style="display: none">
+            <h2>OneDrive documents</h2>
+            <ul id="OneDrive"></ul>
+            <h2>Events</h2>
+            <ul id="Events"></ul>
+            <h2>Contacts</h2>
+            <ul id="Contacts"></ul>
+            <h2>SharePoint Lists of Tenant Root Web</h2>
+            <ul id="SharePoint"></ul>
+        </p>
+    </div>
+</body>
+</html>

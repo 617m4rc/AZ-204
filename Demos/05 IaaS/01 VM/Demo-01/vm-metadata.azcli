@@ -1,0 +1,18 @@
+
+# Get a list of all publishers available in the East US region
+az vm image list-publishers --location eastus
+
+# Get a list of all offers for the MicrosoftWindowsServer publisher
+az vm image list-offers --location eastus --publisher MicrosoftWindowsServer
+
+# Get a list of SKUs for the WindowsServer offer
+az vm image list-skus --location eastus --publisher MicrosoftWindowsServer --offer WindowsServer
+
+# Get a list of all images available for the 2019-Datacenter SKU
+az vm image list --all --location eastus --publisher MicrosoftWindowsServer --offer WindowsServer --sku 2019-Datacenter
+
+# Get the 2019.0.20190603 version of the VM image
+az vm image show --location eastus --publisher MicrosoftWindowsServer --offer WindowsServer --sku 2019-Datacenter --version 2019.0.20190603
+
+# Alternatively, use an URN to get the specified version of the VM image
+az vm image show --location eastus --urn MicrosoftWindowsServer:WindowsServer:2019-Datacenter:2019.0.20190603

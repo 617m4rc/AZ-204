@@ -1,0 +1,1 @@
+curl -H Metadata:true "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://vault.azure.net&client_id=699540cc-5b8b-4c15-8a5b-92a19899874a"

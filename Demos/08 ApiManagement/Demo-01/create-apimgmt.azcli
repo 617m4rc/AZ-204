@@ -1,0 +1,12 @@
+rnd=$RANDOM
+loc=westeurope
+grp=az204-apimgmt-$rnd
+apimgmt=apimgmt-$rnd
+mail="alexander.pajer@integrations.at"
+publisher="integrationsonline"
+url=food-service10142
+
+# Use url of service you published
+swagger="https://$url.azurewebsites.net/swagger/v1/swagger.json"
+
+az apim create -n $apimgmt -g $grp -l $loc --publisher-email $mail --publisher-name $publisher -sku-name Developer

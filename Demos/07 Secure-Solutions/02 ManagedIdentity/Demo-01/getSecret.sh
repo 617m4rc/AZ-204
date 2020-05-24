@@ -1,0 +1,1 @@
+curl -s "https://labvault-16164.vault.azure.net/secrets/ExamplePassword?api-version=2016-10-01" -H "Authorization: Bearer $1" | jq .value

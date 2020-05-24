@@ -1,0 +1,54 @@
+{
+  "workbench.startupEditor": "none",
+  "terminal.integrated.shell.windows": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+  "git.enableSmartCommit": true,
+  "window.zoomLevel": 1,
+  "problems.autoReveal": false,
+  "workbench.editor.enablePreview": false,
+  "window.restoreWindows": "none",
+  "files.hotExit": "off",
+  "editor.wordWrap": "on",
+  "editor.minimap.enabled": false,
+  "problems.decorations.enabled": false,
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "editor.formatOnSave": true,
+  "explorer.openEditors.visible": 0,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "emmet.triggerExpansionOnTab": true,
+  "workbench.editor.restoreViewState": false,
+  "workbench.colorTheme": "Cobalt2",
+  "liveServer.settings.donotShowInfoMsg": true,
+  "bracket-pair-colorizer-2.colors": ["Red", "yellow", "Green", "Pink"],
+  "csharp.format.enable": true,
+  "csharpfixformat.sort.usings.enabled": true,
+  "terminal.integrated.cursorBlinking": true,
+  "terminal.integrated.cursorStyle": "line",
+  "todohighlight.isCaseSensitive": false,
+  "todohighlight.keywords": [
+    {
+      "text": "discuss:",
+      "color": "white",
+      "backgroundColor": "#006400",
+      "overviewRulerColor": "grey"
+    },
+    {
+      "text": "note:",
+      "color": "#ff0000",
+      "backgroundColor": "yellow",
+      "overviewRulerColor": "grey"
+    },
+    {
+      "text": "todo:",
+      "color": "red",
+      "border": "1px solid red",
+      "borderRadius": "2px",
+      "backgroundColor": "rgba(0,0,0,.2)"
+    }
+  ],
+  "diffEditor.ignoreTrimWhitespace": false,
+  "git.confirmSync": false,
+  "git-graph.fetchAvatars": true,
+  "git.autofetchPeriod": 90,
+  "git.autofetch": true
+}

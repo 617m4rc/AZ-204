@@ -1,0 +1,20 @@
+# Get the object for an Azure AD user
+
+az ad user show --id "alexander.pajer@integrations.at" 
+
+# Get a group
+
+az ad group member list --group AZAdmins 
+az ad group member list --group AZAdmins --query [].{Name:displayName}  -o table
+
+# List all applications
+
+az ad sp list --query [].{Name:displayName}  -o table
+
+# Assign permissions with RBAC to Storage
+# https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-user-delegation-sas-create-cli
+
+az role assignment create \
+    --role "Storage Blob Data Contributor" \
+    --assignee <email> \
+    --scope "/subscriptions/<subscription>/resourceGroups/<resource-group>/providers/Microsoft.Storage/storageAccounts/<storage-account>"

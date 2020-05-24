@@ -1,0 +1,22 @@
+[
+  {
+    "id": "docs",
+    "url": "https://docs.microsoft.com/azure"
+  },
+  {
+    "id": "portal",
+    "url": "https://portal.azure.com"
+  },
+  {
+    "id": "learn",
+    "url": "https://docs.microsoft.com/learn"
+  },
+  {
+    "id": "marketplace",
+    "url": "https://azuremarketplace.microsoft.com/marketplace/apps"
+  },
+  {
+    "id": "blog",
+    "url": "https://azure.microsoft.com/blog"
+  }
+]

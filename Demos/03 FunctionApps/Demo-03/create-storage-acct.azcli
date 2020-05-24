@@ -1,0 +1,19 @@
+rnd=$RANDOM
+grp=az204-functs-$rnd
+loc=westeurope
+storage=az204fx$rnd
+source=drop
+target=processed
+
+az group create -n $grp -l $loc
+
+az storage account create -l $loc -n $storage -g $grp --sku Standard_LRS
+
+key=$(az storage account keys list -n $storage --query "[0].[value][0]")
+
+echo "key: $key"
+
+az storage container create -n $source --account-name $storage --account-key $key
+
+az storage container create -n $target --account-name $storage --account-key $key
+

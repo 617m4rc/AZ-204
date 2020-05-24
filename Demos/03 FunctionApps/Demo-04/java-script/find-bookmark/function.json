@@ -1,0 +1,26 @@
+﻿{
+  "bindings": [
+    {
+      "authLevel": "anonymous",
+      "type": "httpTrigger",
+      "direction": "in",
+      "name": "req",
+      "methods": ["get", "post"]
+    },
+    {
+      "type": "http",
+      "direction": "out",
+      "name": "res"
+    },
+    {
+      "direction": "in",
+      "type": "cosmosDB",
+      "connectionStringSetting": "conCosmosDB",
+      "name": "bookmark",
+      "databaseName": "learndb",
+      "collectionName": "bookmarks",
+      "id": "{id}",
+      "partitionKey": "{id}"
+    }
+  ]
+}

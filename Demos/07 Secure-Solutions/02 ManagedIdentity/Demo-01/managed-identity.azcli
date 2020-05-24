@@ -1,0 +1,42 @@
+rnd=$RANDOM
+grp=az204-identity-$rnd
+loc=westeurope
+identity=userassigned-identity-$rnd
+vmname=identityvm-$rnd
+adminuser=demoadmin
+
+az group create -n $grp -l $loc
+
+# create an identity
+
+az identity create -g $grp -l $loc -n $identity 
+
+clientId=$(az identity show -n $identity -g $grp | jq .clientId)
+
+echo "client-id: $clientId"
+
+# use key vault from prev demo - change vault name in script
+
+vault=labvault-16164
+
+# create a vm
+
+az vm create -n $vmname -g $grp --image UbuntuLTS --size Standard_B1ms --generate-ssh-keys --admin-username $adminuser
+
+# list assigned identities
+
+az vm identity show -g $grp -n $vmname
+
+ip=$(az vm show -d -g $grp -n $vmname --query publicIps)
+
+echo "ip address: $ip"
+
+az vm identity assign -g $grp -n $vmname --identities $identity
+
+# connect to vm & get token
+
+ssh $adminuser@52.137.22.38
+
+curl -H Metadata:true "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://vault.azure.net&client_id=<clientid>"
+
+./getSecret.sh $(./getToken.sh | jq -j .access_token)

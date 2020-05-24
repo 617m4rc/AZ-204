@@ -1,0 +1,5 @@
+{
+    "appService.preDeployTask": "publish-release",
+    "appService.deploySubpath": "",
+    "appService.defaultWebAppToDeploy": "/subscriptions/78033352-805c-4acd-af80-f8f95083268d/resourceGroups/az-203-20487/providers/Microsoft.Web/sites/food-web-20487"
+}

@@ -1,0 +1,31 @@
+# Create an Ubuntu VM
+# Make sure you have installed the following Extension https://marketplace.visualstudio.com/items?itemName=ms-vscode.azurecli
+# Use Ctrl + ä to execute the current line
+
+rnd=$RANDOM
+loc=westeurope
+grp="vmgrp-$rnd"
+vmname=ubuntuvm-$rnd
+adminuser=demoadmin
+
+az login
+
+az account show -o table
+
+az vm list -o table
+
+az vm list --query "[].name"
+
+az vm list --query "[?location=='westeurope'].name"
+
+az vm list-sizes --location westeurope -o table
+
+az group create -l $loc -n $grp
+
+vm = $(az vm create -n linuxvm -g $grp --image UbuntuLTS --size Standard_B1ms --generate-ssh-keys --admin-username $adminuser)
+
+echo "vm created: $vm"
+
+# Connect to vm
+
+ssh azureuser@104.40.251.162

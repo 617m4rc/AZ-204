@@ -1,0 +1,13 @@
+rnd=$RANDOM
+loc=westeurope
+grp=az204-msgqueue-$rnd
+acct=msgqueue$rnd
+queue=demoqueue
+
+az group create -n $grp -l $loc
+
+az storage account create -n $acct -g $grp --kind StorageV2 --sku Standard_LRS
+
+key=$(az storage account show-connection-string -n $acct -g $grp | jq .connectionString)
+
+az storage queue create -n $queue --account-key $key --account-name $acct

@@ -1,0 +1,34 @@
+rnd=$RANDOM
+grp=az204-jsfuncts-$rnd
+loc=westeurope
+acct=az204functappcos-$rnd
+storage=az204functappstor$rnd
+queue=az204functappque$rnd
+tbl=bookmarks
+db=learndb
+
+az group create -n $grp -l $loc
+
+# CosmosDB
+
+az cosmosdb create -n $acct -g az-203
+
+az cosmosdb list-keys -n $acct
+
+az cosmosdb sql database create -a $acct -n $db -g $grp
+
+az cosmosdb sql container create -g $grp -a $acct -d $db -n bookmarks --partition-key-path "/id" --throughput "400"
+
+# Message Queue
+
+az storage account create -l $loc -n $storage -g $grp --sku Standard_LRS
+
+key=$(az storage account keys list -n $storage --query "[0].[value][0]")
+
+echo "key: $key"
+
+saskey=$(az storage account generate-sas --account-key $key --account-name $storage --expiry 2021-01-01 --https-only --permissions aclpruw --resource-types co --services q)
+
+echo "sas-key: $saskey"
+
+az storage queue create -n $queue --account-name $storage --account-key $key

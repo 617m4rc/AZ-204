@@ -1,0 +1,19 @@
+grp=az-203
+loc=westus
+vm=$vm
+
+az group create --name $grp --location $loc
+
+az vm create --resource-group $grp --name $vm --image win2016datacenter --generate-ssh-keys --assign-identity --admin-username azureuser --admin-password myPassword12
+
+#Enable system-assigned managed identity on an existing Azure VM
+
+az vm identity assign -g $grp -n $vm
+
+#Disable system-assigned identity from an Azure VM
+
+az vm update -n $vm -g $grp --set identity.type='UserAssigned' 
+
+#Completely disable managed Identity
+
+az vm update -n $vm -g $grp --set identity.type="none"

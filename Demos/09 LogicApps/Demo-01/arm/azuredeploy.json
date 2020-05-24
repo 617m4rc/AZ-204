@@ -1,0 +1,179 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "workflows_DetectSentiments_name": {
+            "defaultValue": "DetectSentiments",
+            "type": "String"
+        },
+        "connections_cognitiveservicestextanalytics_externalid": {
+            "defaultValue": "/subscriptions/78033352-805c-4acd-af80-f8f95083268d/resourceGroups/az204-logicapp-12148/providers/Microsoft.Web/connections/cognitiveservicestextanalytics",
+            "type": "String"
+        },
+        "connections_office365_externalid": {
+            "defaultValue": "/subscriptions/78033352-805c-4acd-af80-f8f95083268d/resourceGroups/az204-logicapp-12148/providers/Microsoft.Web/connections/office365",
+            "type": "String"
+        },
+        "connections_teams_externalid": {
+            "defaultValue": "/subscriptions/78033352-805c-4acd-af80-f8f95083268d/resourceGroups/az204-logicapp-12148/providers/Microsoft.Web/connections/teams",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "2017-07-01",
+            "name": "[parameters('workflows_DetectSentiments_name')]",
+            "location": "westeurope",
+            "properties": {
+                "state": "Disabled",
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "$connections": {
+                            "defaultValue": {},
+                            "type": "Object"
+                        }
+                    },
+                    "triggers": {
+                        "When_a_new_channel_message_is_added": {
+                            "recurrence": {
+                                "frequency": "Minute",
+                                "interval": 3
+                            },
+                            "splitOn": "@triggerBody()",
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['teams']['connectionId']"
+                                    }
+                                },
+                                "method": "get",
+                                "path": "/trigger/beta/teams/@{encodeURIComponent('23951a9e-1324-4c26-936b-c73c522fa80b')}/channels/@{encodeURIComponent('19:3b24bc6a4480445a9fa6e4b7fcca122b@thread.skype')}/messages",
+                                "queries": {
+                                    "$top": 50
+                                }
+                            }
+                        }
+                    },
+                    "actions": {
+                        "Detect_Sentiment_(V2)": {
+                            "runAfter": {},
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "body": {
+                                    "documents": [
+                                        {
+                                            "id": "@triggerBody()?['from']?['user']?['id']",
+                                            "language": "en",
+                                            "text": "@triggerBody()?['body']?['content']"
+                                        }
+                                    ]
+                                },
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['cognitiveservicestextanalytics']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/v2/text/analytics/v2.1/sentiment"
+                            }
+                        },
+                        "For_each": {
+                            "foreach": "@body('Detect_Sentiment_(V2)')?['documents']",
+                            "actions": {
+                                "Condition": {
+                                    "actions": {
+                                        "Send_an_email_(V2)": {
+                                            "runAfter": {},
+                                            "type": "ApiConnection",
+                                            "inputs": {
+                                                "body": {
+                                                    "Body": "<p>@{triggerBody()?['body']}</p>",
+                                                    "Subject": "Ein Schlimmer Post von @{triggerBody()?['from']?['user']?['displayName']}",
+                                                    "To": "alexander.pajer@integrations.at"
+                                                },
+                                                "host": {
+                                                    "connection": {
+                                                        "name": "@parameters('$connections')['office365']['connectionId']"
+                                                    }
+                                                },
+                                                "method": "post",
+                                                "path": "/v2/Mail"
+                                            }
+                                        }
+                                    },
+                                    "runAfter": {},
+                                    "else": {
+                                        "actions": {
+                                            "Send_an_email_(V2)_2": {
+                                                "runAfter": {},
+                                                "type": "ApiConnection",
+                                                "inputs": {
+                                                    "body": {
+                                                        "Body": "<p>@{triggerBody()?['body']}</p>",
+                                                        "Subject": "Braver Mensch - Muss nicht überwacht werden",
+                                                        "To": "alexander.pajer@integrations.at"
+                                                    },
+                                                    "host": {
+                                                        "connection": {
+                                                            "name": "@parameters('$connections')['office365']['connectionId']"
+                                                        }
+                                                    },
+                                                    "method": "post",
+                                                    "path": "/v2/Mail"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "expression": {
+                                        "and": [
+                                            {
+                                                "less": [
+                                                    "@items('For_each')?['score']",
+                                                    0.5
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "type": "If"
+                                }
+                            },
+                            "runAfter": {
+                                "Detect_Sentiment_(V2)": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Foreach"
+                        }
+                    },
+                    "outputs": {}
+                },
+                "parameters": {
+                    "$connections": {
+                        "value": {
+                            "cognitiveservicestextanalytics": {
+                                "connectionId": "[parameters('connections_cognitiveservicestextanalytics_externalid')]",
+                                "connectionName": "cognitiveservicestextanalytics",
+                                "id": "/subscriptions/78033352-805c-4acd-af80-f8f95083268d/providers/Microsoft.Web/locations/westeurope/managedApis/cognitiveservicestextanalytics"
+                            },
+                            "office365": {
+                                "connectionId": "[parameters('connections_office365_externalid')]",
+                                "connectionName": "office365",
+                                "id": "/subscriptions/78033352-805c-4acd-af80-f8f95083268d/providers/Microsoft.Web/locations/westeurope/managedApis/office365"
+                            },
+                            "teams": {
+                                "connectionId": "[parameters('connections_teams_externalid')]",
+                                "connectionName": "teams",
+                                "id": "/subscriptions/78033352-805c-4acd-af80-f8f95083268d/providers/Microsoft.Web/locations/westeurope/managedApis/teams"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
